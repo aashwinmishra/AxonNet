@@ -1,24 +1,26 @@
 """
-Loss: a [smooth] mapping from (Predictions, True Labels) to the Real Line.
-In the calls, the default order is Predictions, and then True Labels.
+A metric evaluates the quality of a set of predictions.
+A loss function is a differentiable metric.
 """
-from AxonNet.tensor import Tensor
 import numpy as np
+from AxonNet.tensor import Tensor
 
 
 class Loss:
-    """Abstract base Loss class."""
-    def loss(self, predictions: Tensor, truth: Tensor) -> float:
+    """Base Class"""
+    def loss(self, predictions: Tensor, targets: Tensor) -> float:
         raise NotImplementedError
 
-    def grad(self, predictions: Tensor, truth: Tensor) -> Tensor:
+    def grad(self, predictions: Tensor, targets: Tensor) -> Tensor:
         raise NotImplementedError
 
 
 class MSE(Loss):
-    """Mean Squared Error between the predictions and the labels."""
-    def loss(self, predictions: Tensor, truth: Tensor) -> float:
-        return np.mean(np.square(predictions - truth)).item()
+    """Mean Squared Error"""
+    def loss(self, predictions: Tensor, targets: Tensor) -> float:
+        return 0.5*np.mean(np.square(predictions - targets)).item()
 
-    def grad(self, predictions: Tensor, truth: Tensor) -> Tensor:
-        return 2.0*(predictions - truth)/len(predictions)
+    def grad(self, predictions: Tensor, targets: Tensor) -> Tensor:
+        return (predictions - targets)/len(targets)
+
+

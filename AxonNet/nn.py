@@ -1,10 +1,11 @@
 """
-A Neural Net is a collection of layers.
+A neural network is a collection of layers.
 """
+
+import numpy as np
+from typing import Sequence, Iterator, Tuple
 from AxonNet.tensor import Tensor
 from AxonNet.layers import Layer
-import numpy as np
-from typing import Dict, Callable, Sequence
 
 
 class NeuralNet:
@@ -21,5 +22,8 @@ class NeuralNet:
             grad = layer.backward(grad)
         return grad
 
-
-            
+    def params_and_grads(self) -> Iterator[Tuple[Tensor, Tensor]]:
+        for layer in self.layers:
+            for name, param in layer.params.items():
+                grad = layer.grads[name]
+                yield param, grad
